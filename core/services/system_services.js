@@ -76,6 +76,22 @@ module.exports.handleGetSystemUserFromUserParamGet = function (req, res) {
     });
 };*/
 
+module.exports.handleGetFbUserGet = function (req, res) {
+    logger.info('NodeGrid:system_services/handleGetFbUserGet - Get fb user');
+    var fbId = req.params.fbUserId;
+    systemDb.getFbUser(fbId, function (status, data) {
+        if (status == 1) {
+            utils.sendResponse(res, 200, 'Data retrieved successfully', data);
+        } else {
+            if (status == 2) {
+                utils.sendResponse(res, 500, 'Internal Server Error - Error occurred at system_users entity database check', 'EMPTY');
+            } else {
+                utils.sendResponse(res, 204, 'No records found from given system user-id or username', 'EMPTY');
+            }
+        }
+    });
+};
+
 module.exports.handleRemoveSystemUserDelete = function (req, res) {
     logger.info('NodeGrid:system_services/handleRemoveSystemUserDelete - Remove given system user');
     systemDb.removeSystemUser(req, res);

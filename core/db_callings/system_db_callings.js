@@ -46,6 +46,7 @@ module.exports.createNewSystemUser = function (req, res) {
                                 "name": name,
                                 "username": username,
                                 "password": password,
+                                "additionalData": req.body.additional,
                                 "createdTime": currentTimestamp,
                                 "lastAccessedTime": ""
                             };
@@ -122,6 +123,27 @@ module.exports.getSystemUser = function (userData, endPoint, callback) {
         }
     }
 
+};
+
+module.exports.getFbUser = function (fbUserId, callback) {
+
+    //create collection object for system_users
+    var system_users = mongoose.model(configurations.USERS_TABLE, entity);
+
+    system_users.find({"data.additionalData.fbUserId": fbUserId}, function (systemUserExistenceErr, systemUserRecord) {
+        if (systemUserExistenceErr) {
+            logger.info("NodeGrid:system_db_callings/getSystemUser - Error occurred at system_users database check. ERROR: " + systemUserExistenceErr);
+            callback(2, "Error occurred at system_users entity database check: " + systemUserExistenceErr);
+        } else {
+            if (systemUserRecord.length != 0) {
+                logger.info("NodeGrid:system_db_callings/getSystemUser - Successfully data captured");
+                callback(1, systemUserRecord)
+            } else {
+                logger.info("NodeGrid:system_db_callings/getSystemUser - No records found from given system username");
+                callback(0, "No records found from given system username");
+            }
+        }
+    });
 };
 
 module.exports.removeSystemUser = function (req, res) {

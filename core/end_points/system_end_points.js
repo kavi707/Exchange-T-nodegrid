@@ -28,6 +28,13 @@ module.exports.createSystemEndPoints = function(app) {
         systemService.handleGetSystemUserFromUserParamGet(req, res);
     });
 
+    // Get given system user from userId
+    app.get('/system/user/fb/:fbUserId', function(req, res) {
+        logger.info("================================================================================================");
+        logger.info('NodeGrid:system_end_points/createSystemEndPoints - [GET/system/user/fb/:fbUserId]');
+        systemService.handleGetFbUserGet(req, res);
+    });
+
     // Get given system user from username
     /*app.get('/system/user/get/username/:username', function(req, res) {
         logger.info("================================================================================================");
