@@ -53,7 +53,7 @@ module.exports.generateUserToken = function (req, res) {
                                 }
                             });
                         } else {
-                            utils.sendResponse(res, 409, 'Conflict - Valid token already exist', checkData);
+                            utils.sendResponse(res, 200, 'Conflict - Valid token already exist', checkData);
                         }
                     }
                 });
