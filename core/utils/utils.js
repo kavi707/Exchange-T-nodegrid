@@ -42,7 +42,7 @@ module.exports.sendResponse = function (res, statusCode, statusMessage, dataObje
             responseObj = {
                 "status":"ERROR",
                 "msg":statusMessage,
-                "data":dataObject
+                "res":dataObject
             };
         } else {
             responseObj = {
