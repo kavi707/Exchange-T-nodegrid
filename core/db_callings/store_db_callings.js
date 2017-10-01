@@ -25,6 +25,10 @@ var entity = connectionObj.entityObj;
 module.exports.saveModelOrEntityToDb = function (req, res) {
 
     var entityModel = mongoose.model(req.params.modelName, entity);
+
+    // Store created time.
+    res.body.createdTime = Math.round((new Date()).getTime() / 1000);;
+
     var newEntity = new entityModel({ data: req.body });
     newEntity.save(function (err, savedEntity) {
         if (err) {
