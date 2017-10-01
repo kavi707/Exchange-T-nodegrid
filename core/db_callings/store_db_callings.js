@@ -27,9 +27,14 @@ module.exports.saveModelOrEntityToDb = function (req, res) {
     var entityModel = mongoose.model(req.params.modelName, entity);
 
     // Store created time.
-    res.body.createdTime = Math.round((new Date()).getTime() / 1000);;
+    var createdTime = Math.round((new Date()).getTime() / 1000);
 
-    var newEntity = new entityModel({ data: req.body });
+    var dbObject = {
+        "createdTime": createdTime,
+        "entity": req.body
+    };
+
+    var newEntity = new entityModel({ data: dbObject});
     newEntity.save(function (err, savedEntity) {
         if (err) {
             logger.info("NodeGrid:store_db_callings/saveModelOrEntityToDb - New model adding failed. ERROR: " + err);
