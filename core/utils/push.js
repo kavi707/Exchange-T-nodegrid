@@ -14,7 +14,7 @@ module.exports.sendPushNotification = function (req, res, pushEntities) {
     var googlePushIds = new Array();
     var applePushIds = new Array();
     for (var objCount = 0; objCount < pushEntities.length; objCount++) {
-        pushObj = pushEntities[objCount].data.push;
+        pushObj = pushEntities[objCount].data.entity.push;
         if (pushObj != undefined) {
             if (pushObj.notifier == 'google') {
                 googlePushIds.push(pushObj.regId);
