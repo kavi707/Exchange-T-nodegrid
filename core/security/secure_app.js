@@ -34,7 +34,7 @@ module.exports.setSecureApp = function (req, res, next) {
             if (status == 1) {
                 next();
             } else if (status == 2) {
-                utils.sendResponse(res, 404, 'Not found - No valid accessToken', 'EMPTY');
+                utils.sendResponse(res, 401, 'Not found - No valid accessToken', 'EMPTY');
             } else if (status == 3) {
                 utils.sendResponse(res, 401, 'Unauthorized - Token expired', response);
             }

@@ -61,7 +61,7 @@ module.exports.createSystemEndPoints = function(app) {
     app.get('/app/collections', function(req, res){
         logger.info("================================================================================================");	
         logger.info('NodeGrid:system_end_points/createSystemEndPoints - [GET/system/collections]');
-   	systemService.handleGetCollections(req, res);
+   	    systemService.handleGetCollections(req, res);
     });
 
 };
