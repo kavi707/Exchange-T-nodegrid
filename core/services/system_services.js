@@ -102,6 +102,22 @@ module.exports.handleGenerateTokenPost = function (req, res) {
     tokenMaster.generateUserToken(req, res);
 };
 
+module.exports.handleTokenStatusGet = function (req, res) {
+    logger.info('NodeGrid:system_services/handleTokenStatusGet - check user security token status');
+    var accessToken = req.params.token;
+    tokenMaster.validateAccessToken(accessToken, function(status, resultData) {
+        if (status == 1) {
+            utils.sendResponse(res, 200, 'Valid accessToken', resultData);
+        } else {
+            if (status == 2) {
+                utils.sendResponse(res, 401, 'No valid token records from given token', 'EMPTY');
+            } else {
+                utils.sendResponse(res, 401, 'Given token is expired', 'EMPTY');
+            }
+        }
+    });
+}
+
 module.exports.getSystemStatus = function (req, res) {
     logger.info('NodeGrid:system_services/getSystemStatus - Get current system status');
     systemDb.checkSystemStatus(req, res);
