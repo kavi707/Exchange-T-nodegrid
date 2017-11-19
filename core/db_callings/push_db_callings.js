@@ -1,6 +1,10 @@
 var logger = require('../utils/log');
 var push = require('../utils/push');
 var mongo_connection = require('../utils/mongoose_connection');
+var utils = require('../utils/utils');
+//Reading the config file
+var fs = require('fs');
+var configurations = JSON.parse(fs.readFileSync('config.json', encoding="ascii"));
 
 var connectionObj = mongo_connection.createMongooseConnection();
 
@@ -77,3 +81,77 @@ module.exports.getEntityRelationsForPush = function (req, res, callback) {
         }
     });
 };
+
+module.exports.storeFCMPushToken = function (req, res) {
+
+    var checkPushTokensCollection = mongoose.model(configurations.PUSH_TOKEN_TABLE, entity);
+    checkPushTokensCollection.find({"data.userId": req.body.userId}, function(pushTokenExistenceErr, pushTokenObj) {
+       if (pushTokenExistenceErr) {
+           logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Error occurred at push_tokens database check. ERROR: " + pushTokenExistenceErr);
+           utils.sendResponse(res, 500, "Internal Server Error - Push token retrieving failed", pushTokenExistenceErr);
+       } else {
+
+           var newPushToken = req.body.push.regId;
+           var setNotifiers = [];
+
+           if (pushTokenObj.length == 0) {
+               storePushToken(req, res);
+           } else {
+               var isTokenExists = false;
+               var notifiers = pushTokenObj[0].data.notifiers;
+               for (var i = 0; i < notifiers.length; i++) {
+                   setNotifiers[i] = notifiers[i];
+                   if (newPushToken == notifiers[i].regId) {
+                       isTokenExists = true;
+                       break;
+                   }
+               }
+
+               if (!isTokenExists) {
+                   setNotifiers[notifiers.length] = req.body.push;
+                   updatePushTokens(req, res, pushTokenObj[0]._id, setNotifiers);
+               } else {
+                   logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Given [push token] is already exists");
+                   utils.sendResponse(res, 409, "Conflict - Given [push token] is already exists", "EMPTY");
+               }
+           }
+       }
+    });
+};
+
+function storePushToken(req, res) {
+    var pushTokens = mongoose.model(configurations.PUSH_TOKEN_TABLE, entity);
+
+    // Store created time.
+    var createdTime = Math.round((new Date()).getTime() / 1000);
+
+    var dbObject = {
+        "createdTime": createdTime,
+        "userId": req.body.userId,
+        "notifiers": [req.body.push]
+    };
+
+    var newEntity = new pushTokens({ data: dbObject});
+    newEntity.save(function (err, savedEntity) {
+        if (err) {
+            logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Push token storing failed. ERROR: " + err);
+            utils.sendResponse(res, 500, "Internal Server Error - Push token storing failed", err);
+        } else {
+            logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Push token added successfully. OBJECT: " + JSON.stringify(savedEntity));
+            utils.sendResponse(res, 200, "Push token added successfully", savedEntity);
+        }
+    });
+}
+
+function updatePushTokens(req, res, objId, newNotifiers) {
+    var pushTokens = mongoose.model(configurations.PUSH_TOKEN_TABLE, entity);
+    pushTokens.update({"_id": objId}, {$set: {"data.notifiers": newNotifiers}}, function(err, updatedEntity) {
+        if (err) {
+            logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Push token storing failed. ERROR: " + err);
+            utils.sendResponse(res, 500, "Internal Server Error - Push token storing failed", err);
+        } else {
+            logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Push token added successfully. OBJECT: " + JSON.stringify(updatedEntity));
+            utils.sendResponse(res, 200, "Push token added successfully", updatedEntity);
+        }
+    });
+}

@@ -12,6 +12,7 @@ var relationsEndPoints = require('./core/end_points/relations_end_points');
 var systemEndPoints = require('./core/end_points/system_end_points');
 var queryEndPoints = require('./core/end_points/query_end_points');
 var pushEndPoints = require('./core/end_points/push_end_points');
+var customEndPoints = require('./core/end_points/custom_end_points');
 var secureApp = require('./core/security/secure_app');
 
 var app = express();
@@ -43,6 +44,7 @@ storingEndPoints.createStoreEndPoints(app);
 relationsEndPoints.createRelationsEndPoints(app);
 queryEndPoints.createQueryEndPoints(app);
 pushEndPoints.createPushEndPoints(app);
+customEndPoints.createCustomEndPoints(app);
 
 //starting the server
 var server = app.listen(configurations.APP_PORT, function () {

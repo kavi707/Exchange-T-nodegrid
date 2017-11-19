@@ -58,3 +58,8 @@ module.exports.getPushNotifiers = function (req, res, type) {
     logger.info('NodeGrid:push_services/getPushNotifiers - setPushNotifiers');
     pushNotifierDb.getNotifier(req, res, type);
 };
+
+module.exports.storePushTokenPost = function (req, res) {
+    logger.info('NodeGrid:push_services/storePushTokenPost - Store FCM push token');
+    pushDb.storeFCMPushToken(req,res);
+};

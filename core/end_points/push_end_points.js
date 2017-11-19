@@ -41,4 +41,9 @@ module.exports.createPushEndPoints = function (app) {
         logger.info('NodeGrid:push_end_points/createPushEndPoints - [GET/app/push/notifier/google]');
         pushServices.getPushNotifiers(req,res, "google");
     });
+
+    app.post('/app/push/push_tokens/store', function(req, res) {
+        logger.info('NodeGrid:push_end_points/createPushEndPoints - [POST/app/push/push_tokens]');
+        pushServices.storePushTokenPost(req, res);
+    });
 };
