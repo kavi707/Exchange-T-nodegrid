@@ -128,7 +128,7 @@ function storePushToken(req, res) {
     var dbObject = {
         "createdTime": createdTime,
         "userId": req.body.userId,
-        "notifiers": [req.body.push]
+        "destinations": [req.body.push]
     };
 
     var newEntity = new pushTokens({ data: dbObject});

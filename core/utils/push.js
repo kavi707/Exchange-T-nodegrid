@@ -11,15 +11,22 @@ var logger = require('../utils/log');
 module.exports.sendPushNotification = function (req, res, pushEntities) {
 
     var pushObj;
+    var pushDestinations;
     var googlePushIds = new Array();
     var applePushIds = new Array();
     for (var objCount = 0; objCount < pushEntities.length; objCount++) {
-        pushObj = pushEntities[objCount].data.entity.push;
-        if (pushObj != undefined) {
-            if (pushObj.notifier == 'google') {
-                googlePushIds.push(pushObj.regId);
-            } else if (pushObj.notifier == 'apple') {
-                applePushIds.push(pushObj.regId);
+
+        pushDestinations = pushEntities[objCount].data.destinations;
+
+        for (var i = 0; i < pushDestinations.length; i++) {
+            pushObj = pushDestinations[i];
+
+            if (pushObj != undefined) {
+                if (pushObj.notifier == 'google') {
+                    googlePushIds.push(pushObj.regId);
+                } else if (pushObj.notifier == 'apple') {
+                    applePushIds.push(pushObj.regId);
+                }
             }
         }
     }
@@ -29,7 +36,7 @@ module.exports.sendPushNotification = function (req, res, pushEntities) {
         utils.sendResponse(res, 204, 'No Contents - Push contents not found in given collection', 'EMPTY');
     } else {
         if (googlePushIds.length != 0)
-            google.sendPushToGCM(googlePushIds, req, res);
+            google.sendPushToFCM(googlePushIds, req, res);
 
         if (applePushIds.length != 0)
             apple.sendPushToAPNS(applePushIds, req, res);
