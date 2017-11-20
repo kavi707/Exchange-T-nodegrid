@@ -7,6 +7,6 @@ var customDb = require('../db_callings/custom_db_callings');
 var logger = require('../utils/log');
 
 module.exports.handleTicketRequestFilterPost = function (req, res) {
-    logger.info('NodeGrid:custom_services/handleCustomTicketRequestFilterPost - Filter and get ticket requests');
+    logger.info('NodeGrid:custom_services/handleTicketRequestFilterPost - Filter and get ticket requests');
     customDb.getFilteredTicketRequest(req,res);
 };

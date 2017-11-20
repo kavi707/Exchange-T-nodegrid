@@ -11,8 +11,8 @@ module.exports.createCustomEndPoints = function(app) {
 
     //Objects ..........................................................................................................
     
-    app.post('/custom/:modelName/getTicketRequest/filter', function(req, res) {
-        logger.info('NodeGrid:custom_end_points/createCustomEndPoints - [POST/custom/:modelName/getTicketRequest/filter]');
+    app.post('/app/ticket_requests/filter', function(req, res) {
+        logger.info('NodeGrid:custom_end_points/createCustomEndPoints - [POST/app/ticket_requests/filter]');
         customServices.handleTicketRequestFilterPost(req, res);
     });
 };
