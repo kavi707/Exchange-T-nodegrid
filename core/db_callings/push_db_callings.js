@@ -92,24 +92,24 @@ module.exports.storeFCMPushToken = function (req, res) {
        } else {
 
            var newPushToken = req.body.push.regId;
-           var setNotifiers = [];
+           var setDestinations = [];
 
            if (pushTokenObj.length == 0) {
                storePushToken(req, res);
            } else {
                var isTokenExists = false;
-               var notifiers = pushTokenObj[0].data.notifiers;
-               for (var i = 0; i < notifiers.length; i++) {
-                   setNotifiers[i] = notifiers[i];
-                   if (newPushToken == notifiers[i].regId) {
+               var destinations = pushTokenObj[0].data.destinations;
+               for (var i = 0; i < destinations.length; i++) {
+                   setDestinations[i] = destinations[i];
+                   if (newPushToken == destinations[i].regId) {
                        isTokenExists = true;
                        break;
                    }
                }
 
                if (!isTokenExists) {
-                   setNotifiers[notifiers.length] = req.body.push;
-                   updatePushTokens(req, res, pushTokenObj[0]._id, setNotifiers);
+                   setNotifiers[destinations.length] = req.body.push;
+                   updatePushTokens(req, res, pushTokenObj[0]._id, setDestinations);
                } else {
                    logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Given [push token] is already exists");
                    utils.sendResponse(res, 409, "Conflict - Given [push token] is already exists", "EMPTY");
@@ -143,9 +143,9 @@ function storePushToken(req, res) {
     });
 }
 
-function updatePushTokens(req, res, objId, newNotifiers) {
+function updatePushTokens(req, res, objId, newDestinations) {
     var pushTokens = mongoose.model(configurations.PUSH_TOKEN_TABLE, entity);
-    pushTokens.update({"_id": objId}, {$set: {"data.notifiers": newNotifiers}}, function(err, updatedEntity) {
+    pushTokens.update({"_id": objId}, {$set: {"data.destinations": newDestinations}}, function(err, updatedEntity) {
         if (err) {
             logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Push token storing failed. ERROR: " + err);
             utils.sendResponse(res, 500, "Internal Server Error - Push token storing failed", err);
