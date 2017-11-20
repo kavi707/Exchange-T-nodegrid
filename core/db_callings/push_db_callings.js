@@ -108,7 +108,7 @@ module.exports.storeFCMPushToken = function (req, res) {
                }
 
                if (!isTokenExists) {
-                   setNotifiers[destinations.length] = req.body.push;
+                   setDestinations[destinations.length] = req.body.push;
                    updatePushTokens(req, res, pushTokenObj[0]._id, setDestinations);
                } else {
                    logger.info("NodeGrid:push_db_callings/storeFCMPushToken - Given [push token] is already exists");
