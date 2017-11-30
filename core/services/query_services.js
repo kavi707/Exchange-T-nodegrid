@@ -55,19 +55,19 @@ module.exports.handleAdvanceQueryModelGet = function (req, res) {
                     whereObj["data." + temp[0]] = temp[1];
                 }
                 else if (item.indexOf(" > ") > 1 || item.indexOf(">") > 1) {
-                    whereObj["data." + temp[0]]["$gt"] = temp[1];
+                    whereObj["data." + temp[0]]["$gt"] = Number(temp[1]);
                 }
                 else if (item.indexOf(" < ") > 1 || item.indexOf("<") > 1) {
-                    whereObj["data." + temp[0]]["$lt"] = temp[1];
+                    whereObj["data." + temp[0]]["$lt"] = Number(temp[1]);
                 }
                 else if (item.indexOf(" => ") > 1 || item.indexOf("=>") > 1) {
-                    whereObj["data." + temp[0]] = {"$gte": temp[1]};
+                    whereObj["data." + temp[0]] = {"$gte": Number(temp[1])};
                 }
                 else if (item.indexOf(" =< ") > 1 || item.indexOf("=<") > 1) {
-                    whereObj["data." + temp[0]] = {"$lte": temp[1]};
+                    whereObj["data." + temp[0]] = {"$lte": Number(temp[1])};
                 }
                 else if (item.indexOf(" != ") > 1 || item.indexOf("!=") > 1) {
-                    whereObj["data." + temp[0]] = {"$not": temp[1]};
+                    whereObj["data." + temp[0]] = {"$not": Number(temp[1])};
                 }
             }
         }
