@@ -15,12 +15,16 @@ module.exports.handleAdvanceQueryModelGet = function (req, res) {
     var whereList = [];
 
     for (var qryKey in query) {
-        if (qryKey === 'qry')
+        if (qryKey === 'qry') {
             var qry = query.qry;
-        else if (qryKey === 'sort')
-            var sort = query.sort;
-        else if (qryKey === 'limit')
+        } else if (qryKey === 'sort') {
+            var sortSplit = query.sort.split(':');
+            var sortObj = {};
+            sortObj['data.' + sortSplit[0].trim()] = Number(sortSplit[1].trim());
+            var sort = sortObj;
+        } else if (qryKey === 'limit') {
             var limit = query.limit;
+        }
     }
 
     var selectObj = {};
