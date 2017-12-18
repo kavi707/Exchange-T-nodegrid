@@ -30,9 +30,11 @@ module.exports.getFilteredTicketRequest = function (req, res) {
     }
 
     var givenDate = null;
+    isDateAvailable = true;
     if ('date' in req.body) {
-        isDateAvailable = true;
         givenDate = req.body.date;
+    } else {
+        givenDate = {"from":Math.round((new Date(+new Date - 12096e5)).getTime() / 1000)};
     }
 
     var givenDestination = null;
@@ -48,6 +50,7 @@ module.exports.getFilteredTicketRequest = function (req, res) {
     }
 
     var query = ticketRequests.find(whereObj);
+    query.sort({ 'data.createdTime': -1 });
     query.exec(function (err, records) {
         if (err) {
             logger.info("NodeGrid:query_db_callings/getFromDBAdvance - [ticket_requests] data querying was failed. ERROR: " + err);

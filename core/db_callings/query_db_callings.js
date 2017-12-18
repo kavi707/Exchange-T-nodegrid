@@ -75,7 +75,6 @@ module.exports.getFromDBAdvance = function (selectObj, whereObj, sort, limit, re
     var entityModel = mongoose.model(req.params.modelName, entity);
     var query = entityModel.find(whereObj, selectObj);
     if (sort != 'undefined') {
-        console.log(sort);
         query.sort(sort);
         // query.sort({'data.createdTime': -1});
         //query.sort([['data.createdTime', 1]]);
