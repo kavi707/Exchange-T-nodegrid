@@ -10,3 +10,8 @@ module.exports.handleTicketRequestFilterPost = function (req, res) {
     logger.info('NodeGrid:custom_services/handleTicketRequestFilterPost - Filter and get ticket requests');
     customDb.getFilteredTicketRequest(req,res);
 };
+
+module.exports.handleUserUpdatePut = function (req, res) {
+    logger.info('NodeGrid:custom_services/handleUserUpdatePut - Update user details');
+    customDb.updateUserEntity(req,res);
+};

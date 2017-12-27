@@ -5,6 +5,7 @@
 
 var logger = require('../utils/log');
 var utils = require('../utils/utils');
+var extend = require('node.extend');
 var mongo_connection = require('../utils/mongoose_connection');
 var connectionObj = mongo_connection.createMongooseConnection();
 
@@ -87,6 +88,41 @@ module.exports.getFilteredTicketRequest = function (req, res) {
             } else {
                 utils.sendResponse(res, 200, '[ticket_requests] data successfully retrieved', records);
             }
+        }
+    });
+};
+
+/**
+ * Update object in given mongo collections
+ * @param req
+ * @param res
+ */
+module.exports.updateUserEntity = function (req, res) {
+
+    var collectionName = configurations.USERS;
+
+    var entityModel = mongoose.model(collectionName, entity);
+
+    entityModel.findOne({_id: req.params.userId}, function (err, oldEntity) {
+        if (err) {
+            logger.info("NodeGrid:custom_db_callings/updateUserEntity - Object updating was failed. ERROR: " + err);
+        } else {
+            Object.keys(req.body).forEach(function(key) {
+                delete oldEntity.data[key];
+            });
+
+            var destObject = extend(req.body, oldEntity.data);
+
+            entityModel.update({_id: req.params.userId}, {data: destObject}, function (err, savedEntity) {
+                if (err) {
+                    logger.info("NodeGrid:custom_db_callings/updateUserEntity - Object updating was failed. ERROR: " + err);
+                    utils.sendResponse(res, 500, "Internal Server Error - Object updating was failed.", err);
+                } else {
+                    logger.info("NodeGrid:custom_db_callings/updateUserEntity - Object updated successfully. OBJECT: " + JSON.stringify(savedEntity));
+                    utils.sendResponse(res, 200, "Object updated successfully", savedEntity);
+                }
+            });
+
         }
     });
 };

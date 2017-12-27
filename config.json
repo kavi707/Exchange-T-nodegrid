@@ -8,6 +8,7 @@
     "TOKEN_TABLE":"tokens",
     "PUSH_TOKEN_TABLE": "push_tokens",
     "TICKET_REQUESTS": "ticket_requests",
+    "USERS": "users",
     "SECURE_APP":true,
     "EABLE_ANALYTICS":true
 }
