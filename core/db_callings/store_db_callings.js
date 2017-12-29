@@ -62,8 +62,14 @@ module.exports.updateEntity = function (req, res) {
             Object.keys(req.body).forEach(function(key) {
             delete oldEntity.data.entity[key];
             });
+
+            // Merge the entity objects
             var destObject = { "entity" : extend(req.body, oldEntity.data.entity)};
-            entityModel.update({_id: req.params.id}, {data: destObject}, function (err, savedEntity) {
+
+            // Merge parent objects
+            var parentObject = extend(oldEntity.data, destObject);
+
+            entityModel.update({_id: req.params.id}, {data: parentObject}, function (err, savedEntity) {
                 if (err) {
                     logger.info("NodeGrid:store_db_callings/updateEntity - Object updating was failed. ERROR: " + err);
                     utils.sendResponse(res, 500, "Internal Server Error - Object updating was failed.", err);
