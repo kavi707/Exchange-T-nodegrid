@@ -99,7 +99,7 @@ module.exports.getFilteredTicketRequest = function (req, res) {
  */
 module.exports.updateUserEntity = function (req, res) {
 
-    var collectionName = configurations.USERS;
+    var collectionName = configurations.USERS_TABLE;
 
     var entityModel = mongoose.model(collectionName, entity);
 
