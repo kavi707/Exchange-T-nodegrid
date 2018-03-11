@@ -47,7 +47,8 @@ module.exports.getFilteredTicketRequest = function (req, res) {
     var givenQty = null;
     if ('qty' in req.body) {
         givenQty = req.body.qty;
-        whereObj['data.entity.qty'] = {"$gte": givenQty};
+        // Remove the filter for quantity
+        //whereObj['data.entity.qty'] = {"$gte": givenQty};
     }
 
     var query = ticketRequests.find(whereObj);
